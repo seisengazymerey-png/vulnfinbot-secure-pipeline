@@ -32,13 +32,9 @@ jobs:
       - name: Create reports directory
         run: mkdir -p reports
 
-      # ---- Unit tests (a failure here SHOULD fail the build) ----
       - name: Run unit tests
         run: pytest tests/test_app.py -v
 
-      # ---- SAST ----
-      # Scanner steps use continue-on-error so that one failing scanner
-      # does not stop later scanners or the report upload.
       - name: Bandit (SAST)
         continue-on-error: true
         run: bandit -r app/ -f json -o reports/bandit-report.json
@@ -53,26 +49,25 @@ jobs:
             --output reports/semgrep-report.json \
             app/
 
-      # ---- Dependency scanning ----
       - name: pip-audit (dependencies)
         continue-on-error: true
         run: pip-audit -r requirements.txt -f json -o reports/dependency-report.json
 
-      # ---- Container ----
       - name: Build Docker image
         run: docker build -t vulnfinbot:latest .
 
       - name: Trivy image scan
         continue-on-error: true
-        uses: aquasecurity/trivy-action@0.28.0
-        with:
-          image-ref: vulnfinbot:latest
-          format: json
-          output: reports/trivy-report.json
-          severity: UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL
-          exit-code: "0"
+        run: |
+          chmod 777 reports
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v "$(pwd)/reports:/reports" \
+            aquasec/trivy:latest image \
+            --format json \
+            --output /reports/trivy-report.json \
+            vulnfinbot:latest
 
-      # ---- DAST ----
       - name: Start application container
         run: |
           docker run -d --name vulnfinbot -p 5000:5000 vulnfinbot:latest
@@ -100,11 +95,9 @@ jobs:
         if: always()
         run: docker rm -f vulnfinbot || true
 
-      # ---- AI security tests ----
       - name: AI security tests
         run: pytest tests/test_ai_security.py -v
 
-      # ---- Reporting ----
       - name: Summarize findings
         if: always()
         run: |
