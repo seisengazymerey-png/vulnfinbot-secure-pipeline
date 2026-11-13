@@ -1,0 +1,42 @@
+rules:
+  - id: python-eval-usage
+    languages: [python]
+    severity: ERROR
+    message: "eval() executes arbitrary code. Use ast.literal_eval or avoid dynamic evaluation."
+    pattern: eval(...)
+
+  - id: python-exec-usage
+    languages: [python]
+    severity: ERROR
+    message: "exec() executes arbitrary code. Avoid dynamic execution."
+    pattern: exec(...)
+
+  - id: python-hardcoded-secret
+    languages: [python]
+    severity: ERROR
+    message: "Possible hardcoded credential. Load secrets from environment variables or a secret manager."
+    patterns:
+      - pattern: $VAR = "..."
+      - metavariable-regex:
+          metavariable: $VAR
+          regex: (?i).*(password|passwd|secret|api_key|apikey|token).*
+
+  - id: python-weak-hash
+    languages: [python]
+    severity: WARNING
+    message: "MD5/SHA1 are weak hashes. Use SHA-256 or a password hashing function (bcrypt, argon2)."
+    pattern-either:
+      - pattern: hashlib.md5(...)
+      - pattern: hashlib.sha1(...)
+
+  - id: python-subprocess-shell-true
+    languages: [python]
+    severity: ERROR
+    message: "shell=True allows command injection. Pass a list of arguments instead."
+    pattern: subprocess.$FUNC(..., shell=True, ...)
+
+  - id: flask-debug-enabled
+    languages: [python]
+    severity: ERROR
+    message: "Flask debug mode exposes an interactive debugger. Never enable it outside local development."
+    pattern: $APP.run(..., debug=True, ...)

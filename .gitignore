@@ -1,0 +1,19 @@
+# Virtual environments
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Local secrets
+.env
+*.pem
+*.key
+
+# Generated scanner reports (kept as GitHub Actions artifacts)
+reports/*.json
+reports/ai-security-report.md
+!reports/.gitkeep
+!reports/technical-report.md
