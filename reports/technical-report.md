@@ -1,8 +1,7 @@
 # Technical Report: Mini-VulnFinBot Security Pipeline
 
-Author: 
-Group: 
-Date: 
+Author:Seisengazy Merey
+Group: Sis-2421ns
 Repository: https://github.com/seisengazymerey-png/vulnfinbot-secure-pipeline
 Pipeline run link: 
 
