@@ -3,7 +3,7 @@
 Author:Seisengazy Merey
 Group: Sis-2421ns
 Repository: https://github.com/seisengazymerey-png/vulnfinbot-secure-pipeline
-Pipeline run link: 
+Pipeline run link: https://github.com/seisengazymerey-png/vulnfinbot-secure-pipeline/actions/runs/43445184781
 
 ## 1. Summary
 
