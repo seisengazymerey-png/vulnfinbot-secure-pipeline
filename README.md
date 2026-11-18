@@ -1,7 +1,7 @@
 # vulnfinbot-secure-pipeline
 
-Author: 
-Group: 
+Author:Seisengazy Merey
+Group: Sis-2421ns
 
 ## 1. Project description
 
